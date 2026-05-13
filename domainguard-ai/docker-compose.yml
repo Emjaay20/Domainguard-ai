@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # The Message Queue
+  redis:
+    image: redis:alpine
+    container_name: domainguard-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # The Raw Data Lake
+  mongodb:
+    image: mongo:latest
+    container_name: domainguard-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: supersecretpassword
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  mongodb_data:

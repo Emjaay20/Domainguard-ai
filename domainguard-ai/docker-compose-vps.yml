@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: dg_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: supersecretpassword
+    # Notice: NO PORTS EXPOSED! 100% isolated.
+    volumes:
+      - dg_mongo_data:/data/db
+    restart: unless-stopped
+    networks:
+      - dg_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: dg_redis
+    # Notice: NO PORTS EXPOSED! 100% isolated.
+    restart: unless-stopped
+    networks:
+      - dg_network
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  search-api:
+    build: ./search-api
+    container_name: dg_api
+    ports:
+      - "8005:8000" # Maps host port 8005 to container port 8000
+    environment:
+      - MONGO_URI=mongodb://admin:supersecretpassword@mongodb:27017/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - dg_network
+
+  ai-enrichment:
+    build: ./ai-enrichment-service
+    container_name: dg_enrichment
+    environment:
+      - MONGO_URI=mongodb://admin:supersecretpassword@mongodb:27017/
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - dg_network
+
+  ingestion-fleet:
+    build: ./ingestion-fleet
+    container_name: dg_scraper
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MONGO_URI=mongodb://admin:supersecretpassword@mongodb:27017/
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - dg_network
+
+volumes:
+  dg_mongo_data:
+
+networks:
+  dg_network:
+    driver: bridge
