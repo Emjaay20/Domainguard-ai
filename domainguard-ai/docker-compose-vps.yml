@@ -69,8 +69,7 @@ services:
     build: ./ingestion-fleet
     container_name: dg_scraper
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis:6379
       - MONGO_URI=mongodb://admin:supersecretpassword@mongodb:27017/
     depends_on:
       redis:

@@ -13,10 +13,11 @@ export default function IncidentReports() {
   const reportRef = useRef<HTMLDivElement>(null);
 
   // Setup the print function
+  // Cast options to `any` to avoid a TypeScript mismatch in some `react-to-print` type definitions
   const handlePrint = useReactToPrint({
     content: () => reportRef.current,
     documentTitle: selectedThreat ? `Threat_Report_${selectedThreat.url}` : "Incident_Report",
-  });
+  } as any);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/threats")

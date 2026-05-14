@@ -1,3 +1,4 @@
+import os
 import pymongo
 import logging
 import time
@@ -8,13 +9,14 @@ from langchain_core.output_parsers import JsonOutputParser
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-MONGO_URI = 'mongodb://admin:supersecretpassword@localhost:27017/'
+MONGO_URI = os.getenv("MONGO_URI", 'mongodb://admin:supersecretpassword@mongodb:27017/')
 client = pymongo.MongoClient(MONGO_URI)
 db = client['domainguard_raw_intel']
 collection = db['raw_html_dump']
 
 logging.info("Connecting to Local Llama 3 Model...")
-llm = ChatOllama(model="llama3", format="json", temperature=0)
+ollama_host = os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434")
+llm = ChatOllama(model="llama3", base_url=ollama_host, format="json", temperature=0)
 
 # --- THE UPGRADED ENTERPRISE PROMPT ---
 prompt = ChatPromptTemplate.from_messages([

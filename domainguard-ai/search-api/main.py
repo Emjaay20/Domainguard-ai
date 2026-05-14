@@ -1,10 +1,11 @@
+import os
+from typing import List
+
+import pymongo
+import redis
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
-import pymongo
-import redis
-import json
 
 app = FastAPI(title="DomainGuard AI API")
 
@@ -21,13 +22,15 @@ app.add_middleware(
 )
 
 # 1. Database Connections
-# Connect to Docker MongoDB
-mongo_client = pymongo.MongoClient('mongodb://admin:supersecretpassword@localhost:27017/')
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://admin:supersecretpassword@mongodb:27017/")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+
+mongo_client = pymongo.MongoClient(MONGO_URI)
 db = mongo_client['domainguard_raw_intel']
 collection = db['raw_html_dump']
 
-# Connect to Docker Redis
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
+redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 # 2. Pydantic Models for Data Validation
 class ScanRequest(BaseModel):

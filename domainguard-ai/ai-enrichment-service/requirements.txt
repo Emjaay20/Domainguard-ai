@@ -1,3 +1,6 @@
 pymongo
+beautifulsoup4
+langchain-core
+langchain-ollama
 openai
 requests

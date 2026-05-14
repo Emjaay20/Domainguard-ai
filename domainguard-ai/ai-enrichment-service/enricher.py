@@ -1,3 +1,4 @@
+import os
 import pymongo
 import logging
 from bs4 import BeautifulSoup
@@ -7,7 +8,7 @@ from transformers import pipeline
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 1. Connect to our Dockerized MongoDB
-MONGO_URI = 'mongodb://admin:supersecretpassword@localhost:27017/'
+MONGO_URI = os.getenv("MONGO_URI", 'mongodb://admin:supersecretpassword@mongodb:27017/')
 client = pymongo.MongoClient(MONGO_URI)
 db = client['domainguard_raw_intel']
 collection = db['raw_html_dump']

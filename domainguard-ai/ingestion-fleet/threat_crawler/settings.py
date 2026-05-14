@@ -89,7 +89,9 @@ FEED_EXPORT_ENCODING = "utf-8"
 # --- DOMAINGUARD AI: CORE SETTINGS ---
 
 # 1. MongoDB Connection
-MONGO_URI = 'mongodb://admin:supersecretpassword@localhost:27017/'
+import os
+
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://admin:supersecretpassword@mongodb:27017/')
 MONGO_DATABASE = 'domainguard_raw_intel'
 
 # 2. Enable the MongoDB Pipeline
@@ -120,4 +122,4 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 SCHEDULER_PERSIST = True
 
 # 3. Define the connection to our local Docker Redis instance
-REDIS_URL = 'redis://localhost:6379'
+REDIS_URL = os.getenv('REDIS_URL', 'redis://redis:6379')
