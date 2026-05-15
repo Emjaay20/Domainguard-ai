@@ -15,6 +15,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:3001",
         "http://192.168.100.20:3001",
+        "https://domainguard-ai.vercel.app",
+        "https://domainguard-ai.duckdns.org",
     ],
     allow_credentials=True,
     allow_methods=["*"],
