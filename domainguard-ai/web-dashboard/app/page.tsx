@@ -14,9 +14,11 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://domainguard-ai.duckdns.org";
+
 
   const fetchThreats = () => {
-    fetch("http://localhost:8000/api/threats")
+    fetch(`${API_URL}/api/threats`)
       .then((res) => res.json())
       .then((data) => {
         setThreats(data.data || []);
@@ -79,7 +81,7 @@ export default function Dashboard() {
     const toastId = toast.loading("Deploying Scrapy Fleet...");
 
     try {
-      await fetch("http://localhost:8000/api/scan", {
+      await fetch(`${API_URL}/api/scan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: scanUrl }),

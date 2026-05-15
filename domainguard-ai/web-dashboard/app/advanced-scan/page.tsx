@@ -12,6 +12,8 @@ export default function AdvancedScan() {
   // New States for Live Tracking
   const [activeBatchUrls, setActiveBatchUrls] = useState<string[]>([]);
   const [batchResults, setBatchResults] = useState<Threat[]>([]);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://domainguard-ai.duckdns.org";
+
 
   // Parse raw text/CSV into an array of URLs
   const parseUrls = (text: string) => {
@@ -55,7 +57,7 @@ export default function AdvancedScan() {
     const toastId = toast.loading(`Deploying fleet to ${urls.length} targets...`);
 
     try {
-      await fetch("http://localhost:8000/api/scan/bulk", {
+      await fetch(`${API_URL}/api/scan/bulk`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ urls }),
@@ -78,7 +80,7 @@ export default function AdvancedScan() {
 
     const pollResults = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/threats?limit=100");
+        const res = await fetch(`${API_URL}/api/threats?limit=100`);
         const data = await res.json();
         
         // Filter the global threat feed to ONLY include URLs from this specific batch

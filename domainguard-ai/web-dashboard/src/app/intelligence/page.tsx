@@ -12,9 +12,11 @@ interface Threat {
 export default function IntelligenceHub() {
   const [threats, setThreats] = useState<Threat[]>([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://domainguard-ai.duckdns.org";
+
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/threats?limit=100")
+    fetch(`${API_URL}/api/threats?limit=100`)
       .then((res) => res.json())
       .then((data) => {
         setThreats(data.data || []);
