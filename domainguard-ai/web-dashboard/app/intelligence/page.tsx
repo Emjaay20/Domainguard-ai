@@ -16,6 +16,8 @@ import {
 
 interface Threat {
   id: string;
+  } from "recharts";
+  import { apiUrl } from "@/src/lib/api";
   url: string;
   ai_sentiment_label: string;
   structured_data: { threat_score?: number };
@@ -29,7 +31,7 @@ export default function IntelligenceHub() {
     fetch("http://localhost:8000/api/threats?limit=50")
       .then((res) => res.json())
       .then((data) => {
-        setThreats((data.data || []).reverse());
+      fetch(apiUrl("/api/threats?limit=50"))
         setLoading(false);
       })
       .catch(() => setLoading(false));

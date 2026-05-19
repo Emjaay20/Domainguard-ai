@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Threat } from "@/src/components/ThreatCard"; // Reusing your Threat interface
+import { apiUrl } from "@/src/lib/api";
 
 export default function AdvancedScan() {
   const [bulkText, setBulkText] = useState("");
@@ -55,7 +56,7 @@ export default function AdvancedScan() {
     const toastId = toast.loading(`Deploying fleet to ${urls.length} targets...`);
 
     try {
-      await fetch("http://localhost:8000/api/scan/bulk", {
+      await fetch(apiUrl("/api/scan/bulk"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ urls }),
@@ -78,7 +79,7 @@ export default function AdvancedScan() {
 
     const pollResults = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/threats?limit=100");
+        const res = await fetch(apiUrl("/api/threats?limit=100"));
         const data = await res.json();
         
         // Filter the global threat feed to ONLY include URLs from this specific batch

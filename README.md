@@ -41,9 +41,8 @@ Ensure you have Docker, Node.js, Python 3.13+, and Ollama installed.
 
 **1. Infrastructure (Terminal 1)**
 ```bash
-# Start MongoDB and Redis containers
-docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=supersecretpassword mongo
-docker run -d -p 6379:6379 redis
+cd domainguard-ai
+docker compose -f docker-compose.yml up -d
 
 ```
 
@@ -52,7 +51,6 @@ docker run -d -p 6379:6379 redis
 ```bash
 cd search-api
 source venv/bin/activate
-pip install -r requirements.txt
 python main.py
 
 ```
@@ -62,7 +60,6 @@ python main.py
 ```bash
 cd ingestion-fleet
 source venv/bin/activate
-pip install -r requirements.txt
 scrapy crawl intel_spider
 
 ```
@@ -72,7 +69,6 @@ scrapy crawl intel_spider
 ```bash
 cd ai-enrichment-service
 source venv/bin/activate
-pip install -r requirements.txt
 ollama run llama3
 python threat_parser.py
 

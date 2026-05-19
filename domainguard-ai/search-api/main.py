@@ -22,8 +22,8 @@ app.add_middleware(
 )
 
 # 1. Database Connections
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://admin:supersecretpassword@mongodb:27017/")
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://admin:supersecretpassword@localhost:27017/?authSource=admin")
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 
 mongo_client = pymongo.MongoClient(MONGO_URI)

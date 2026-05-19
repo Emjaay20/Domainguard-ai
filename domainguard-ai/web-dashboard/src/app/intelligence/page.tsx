@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { apiUrl } from "@/src/lib/api";
 
 interface Threat {
   id: string;
@@ -14,7 +15,7 @@ export default function IntelligenceHub() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/threats?limit=100")
+    fetch(apiUrl("/api/threats?limit=100"))
       .then((res) => res.json())
       .then((data) => {
         setThreats(data.data || []);

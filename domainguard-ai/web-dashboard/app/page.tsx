@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import ThreatCard, { Threat } from "@/src/components/ThreatCard";
+import { apiUrl } from "@/src/lib/api";
 
 export default function Dashboard() {
   const [threats, setThreats] = useState<Threat[]>([]);
@@ -16,7 +17,7 @@ export default function Dashboard() {
   const itemsPerPage = 4;
 
   const fetchThreats = () => {
-    fetch("http://localhost:8000/api/threats")
+    fetch(apiUrl("/api/threats"))
       .then((res) => res.json())
       .then((data) => {
         setThreats(data.data || []);
@@ -79,7 +80,7 @@ export default function Dashboard() {
     const toastId = toast.loading("Deploying Scrapy Fleet...");
 
     try {
-      await fetch("http://localhost:8000/api/scan", {
+      await fetch(apiUrl("/api/scan"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: scanUrl }),

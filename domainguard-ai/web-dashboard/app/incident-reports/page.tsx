@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Threat } from "@/src/components/ThreatCard"; // Reusing your interface
+import { apiUrl } from "@/src/lib/api";
 
 export default function IncidentReports() {
   const [threats, setThreats] = useState<Threat[]>([]);
@@ -20,7 +21,7 @@ export default function IncidentReports() {
   } as any);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/threats")
+    fetch(apiUrl("/api/threats"))
       .then((res) => res.json())
       .then((data) => {
         setThreats(data.data || []);
@@ -53,7 +54,7 @@ export default function IncidentReports() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1 min-h-0">
         
         {/* LEFT COLUMN: Threat Selector */}
-        <div className="lg:col-span-4 bg-[#121620] border border-slate-800 rounded-xl p-4 overflow-y-auto h-[700px] shadow-lg">
+        <div className="lg:col-span-4 bg-[#121620] border border-slate-800 rounded-xl p-4 overflow-y-auto h-175 shadow-lg">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">Recent Intercepts</h2>
           {loading ? (
             <div className="animate-pulse space-y-3"><div className="h-16 bg-slate-800/50 rounded-lg w-full"></div></div>
@@ -83,7 +84,7 @@ export default function IncidentReports() {
         </div>
 
         {/* RIGHT COLUMN: The Printable Report Preview */}
-        <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl p-8 flex justify-center overflow-y-auto h-[700px] shadow-inner">
+        <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl p-8 flex justify-center overflow-y-auto h-175 shadow-inner">
           
           {selectedThreat ? (
             <div 
